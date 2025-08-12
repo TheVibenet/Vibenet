@@ -4,6 +4,14 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>VibeNet — PM Shri KBJ Govt</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q32V71W4CP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Q32V71W4CP');
+</script>
 <style>
   :root{
     --red:#c7121a;
@@ -82,11 +90,9 @@
 </head>
 <body>
 
-<!-- Left column: login / accounts -->
 <div class="wrap">
 
   <div class="panel" id="leftPanel">
-    <!-- Login card -->
     <div id="loginCard">
       <div class="login-title">Vibenet</div>
       <div class="muted">Connect with students • PM Shri KBJ Govt</div>
@@ -108,12 +114,10 @@
 
       <div class="accounts">
         <h4>Available usernames (no passwords shown)</h4>
-        <!-- 15 placeholders shown here -->
         <div id="accountList"></div>
       </div>
     </div>
 
-    <!-- After login small profile card -->
     <div id="profileCard" style="display:none;margin-top:14px;background:linear-gradient(90deg,#fff,#fff);padding:12px;border-radius:10px">
       <div style="display:flex;align-items:center;gap:10px">
         <div style="width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--red),#ff6b6b);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800">VN</div>
@@ -125,7 +129,6 @@
     </div>
   </div>
 
-  <!-- Right column: feed -->
   <div class="panel" id="rightPanel" style="display:none">
     <div class="site-header" id="siteHeader">
       <div class="brand"><div class="logo">VN</div><div class="site-title">Welcome to VibeNet</div></div>
@@ -150,13 +153,11 @@
       </div>
 
       <div class="feed" id="feed">
-        <!-- Demo posts inserted by JS -->
-      </div>
+        </div>
     </div>
   </div>
 </div>
 
-<!-- Modal: class selection & users -->
 <div class="modal-bg" id="modalBg">
   <div class="modal" role="dialog" aria-modal="true">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
@@ -170,8 +171,7 @@
     </div>
 
     <div id="usersArea">
-      <!-- user chips injected here -->
-    </div>
+      </div>
 
     <div style="margin-top:12px;color:var(--muted);font-size:13px">Click <strong>Copy</strong> to copy username to clipboard.</div>
   </div>
