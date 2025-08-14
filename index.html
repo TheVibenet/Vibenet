@@ -1,422 +1,213 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>VibeNet — PM Shri KBJ Govt</title>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q32V71W4CP"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VibeNet Login</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=YOUR_GA_TRACKING_ID"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
-  gtag('config', 'G-Q32V71W4CP');
+  gtag('config', 'YOUR_GA_TRACKING_ID');
 </script>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
-  import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
-  
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyCI5NOdkyTLBvMsYCUJKpnFZ3Kyf77KZTM",
-    authDomain: "the-vibenet.firebaseapp.com",
-    projectId: "the-vibenet",
-    storageBucket: "the-vibenet.firebasestorage.app",
-    messagingSenderId: "750456552470",
-    appId: "1:750456552470:web:87d410021cda7ef10a0937",
-    measurementId: "G-D6NTSHEPTH"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  const database = getDatabase(app);
-
-  /* New JavaScript for Firebase */
-  const postsRef = ref(database, 'posts');
-
-  window.makePost = function() {
-    const text = document.getElementById('composer').value.trim();
-    if (text) {
-      const postData = {
-        user: document.getElementById('headerUser').textContent,
-        caption: text,
-        timestamp: new Date().toISOString(),
-        likes: 0
-      };
-      push(postsRef, postData);
-      document.getElementById('composer').value = '';
-    }
-  };
-
-  window.renderPosts = function() {
-    onValue(postsRef, (snapshot) => {
-      const posts = [];
-      const postsData = snapshot.val();
-      if (postsData) {
-        for (let id in postsData) {
-          posts.unshift({ id, ...postsData[id] });
-        }
-      }
-      
-      feed.innerHTML = '';
-      posts.forEach((p, idx) => {
-        const el = document.createElement('div'); el.className='post';
-        el.innerHTML = `
-          <div class="post-header">
-            <div class="avatar">${p.user.replace(/[^A-Z]/gi,'').slice(0,2).toUpperCase()}</div>
-            <div style="flex:1">
-              <div style="font-weight:800">${p.user}</div>
-              <div style="font-size:13px;color:var(--muted)">PM Shri KBJ Govt</div>
-            </div>
-          </div>
-          <div class="post-body"><img src="https://source.unsplash.com/featured/?school,students" alt="post image"></div>
-          <div class="post-footer">
-            <div>
-              <div style="font-weight:700">${p.caption}</div>
-              <div style="font-size:13px;color:var(--muted)">${new Date(p.timestamp).toLocaleDateString()}</div>
-            </div>
-            <div style="text-align:right">
-              <div class="likes-count" id="likes-${p.id}">${p.likes.toLocaleString()}</div>
-              <button class="like-btn" onclick="toggleLike('${p.id}')" id="likebtn-${p.id}">🤍 Like</button>
-            </div>
-          </div>
-        `;
-        feed.appendChild(el);
-      });
-    });
-  };
-
-  window.toggleLike = function(postId) {
-    // You would add logic here to update likes in the database
-    // For now, it will just update the UI
-    const likesEl = document.getElementById('likes-'+postId);
-    const btn = document.getElementById('likebtn-'+postId);
-    let current = parseInt( (likesEl.textContent||'0').replace(/,/g,'') );
-    if(btn.classList.contains('liked')){
-      current = Math.max(0,current-1);
-      btn.classList.remove('liked');
-      btn.textContent = '🤍 Like';
-    } else {
-      current = current+1;
-      btn.classList.add('liked');
-      btn.textContent = '❤️ Liked';
-    }
-    likesEl.textContent = current.toLocaleString();
-  };
-</script>
-
 <style>
   :root{
     --red:#c7121a;
     --white:#ffffff;
     --bg:#fff6f6;
-    --muted:#666;
-    --card-shadow: 0 8px 30px rgba(0,0,0,0.08);
-    --radius:12px;
   }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;background:var(--bg);color:#111}
-  /* Header (after login) */
-  .site-header{background:var(--red);color:var(--white);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:40}
-  .brand{display:flex;align-items:center;gap:12px}
-  .brand .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#fff2f2,rgba(255,255,255,0.06));display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--red);font-size:18px}
-  .site-title{font-weight:800;font-size:18px}
-  .header-right{display:flex;gap:10px;align-items:center}
-  .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.12);color:#fff;padding:8px 10px;border-radius:10px;cursor:pointer}
-  .btn-white{background:#fff;color:var(--red);padding:8px 12px;border-radius:10px;border:0;cursor:pointer}
-
-  /* Layout */
-  .wrap{max-width:1100px;margin:20px auto;padding:0 16px;display:grid;grid-template-columns:320px 1fr;gap:18px}
-  @media(max-width:920px){.wrap{grid-template-columns:1fr;padding:12px}}
-
-  /* Left column (card/login) */
-  .panel{background:var(--white);border-radius:var(--radius);padding:16px;box-shadow:var(--card-shadow)}
-  .login-title{font-size:20px;font-weight:800;color:var(--red);margin:0 0 6px 0}
-  .muted{color:var(--muted);font-size:13px;margin-bottom:10px}
-
-  .form-row{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
-  input[type="text"], input[type="password"]{padding:10px 12px;border-radius:10px;border:1px solid #eee;font-size:15px}
-  .signin{background:var(--red);color:white;border:0;padding:10px;border-radius:10px;font-weight:700;cursor:pointer;width:100%}
-  .signin:active{transform:translateY(1px)}
-  .inline-error{display:none;color:#b71c1c;font-size:14px;margin-top:6px;display:flex;gap:8px;align-items:center}
-
-  /* Available accounts list (left panel) */
-  .accounts {margin-top:12px}
-  .accounts h4{margin:8px 0 10px 0;font-size:15px}
-  .acct-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;background:#fff;border:1px solid #fbebeb;margin-bottom:8px}
-  .copy-btn{background:var(--red);color:#fff;border:0;padding:6px 8px;border-radius:8px;cursor:pointer;font-size:13px}
-
-  /* Right column (feed) */
-  .top-actions{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
-  .school-card{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff,#fff);border:1px solid rgba(199,18,26,0.08);box-shadow:var(--card-shadow);cursor:pointer}
-  .school-name{font-weight:800;color:var(--red)}
-
-  .composer{background:var(--white);padding:12px;border-radius:12px;box-shadow:var(--card-shadow);margin-bottom:14px}
-  .composer input{width:100%;padding:10px;border-radius:10px;border:1px solid #f0e0e0}
-
-  .feed{display:flex;flex-direction:column;gap:14px}
-  .post{background:var(--white);border-radius:12px;box-shadow:var(--card-shadow);overflow:hidden}
-  .post-header{display:flex;align-items:center;gap:10px;padding:12px}
-  .avatar{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--red),#ff6b6b);display:flex;align-items:center;justify-content:center;color:white;font-weight:800}
-  .post-body img{width:100%;display:block;height:auto}
-  .post-footer{padding:12px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-  .like-btn{background:transparent;border:0;color:var(--red);font-weight:700;cursor:pointer}
-  .likes-count{font-weight:700;color:var(--red)}
-
-  /* Modal */
-  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;padding:18px;z-index:80}
-  .modal{width:100%;max-width:760px;background:var(--white);border-radius:12px;padding:18px;box-shadow:var(--card-shadow)}
-  .tabs{display:flex;gap:8px;margin-bottom:12px}
-  .tab{padding:8px 12px;border-radius:10px;border:1px solid #eee;cursor:pointer}
-  .tab.active{background:var(--red);color:#fff;border-color:var(--red)}
-  .users-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
-  .user-chip{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;border:1px solid #f0e0e0}
-  .user-chip a{color:var(--red);text-decoration:none;font-weight:700}
-  .copy-sm{background:var(--red);color:#fff;border:0;padding:6px 8px;border-radius:8px;cursor:pointer;font-size:13px}
-
-  /* small */
-  @media(max-width:920px){
-    .wrap{grid-template-columns:1fr}
-    .users-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+  body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:var(--bg);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+  }
+  .container{
+    background:var(--white);
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(200,0,0,0.2);
+    width:360px;
+    max-width:90%;
+    text-align:center;
+  }
+  h2{color:var(--red); margin-bottom:25px; font-size:26px;}
+  label{display:block; font-size:12px; text-align:left; margin-bottom:4px; font-weight:600;}
+  input{
+    width:100%; padding:12px; margin-bottom:12px; border-radius:10px; border:1px solid #ddd; font-size:16px;
+  }
+  input:focus{border-color:var(--red); outline:none; box-shadow:0 0 8px rgba(199,18,26,0.3);}
+  button{
+    width:100%; padding:12px; border:none; border-radius:10px; background:var(--red); color:white; font-weight:700; font-size:16px; cursor:pointer; margin-bottom:12px; transition:0.3s;
+  }
+  button:hover{background:#e32a3b;}
+  .social-btns{display:flex; justify-content:space-between; margin-bottom:15px; gap: 10px;}
+  .social-btns button{
+    width:48%; background:#f0f0f0; color:#333; border:1px solid #ccc; font-weight:700;
+  }
+  .social-btns button:hover{background:#eee;}
+  .message{height:20px; font-size:14px; margin-bottom:10px;}
+  .switch-text{font-size:14px;}
+  .switch-text a{color:var(--red); font-weight:700; cursor:pointer; text-decoration:none;}
+  .social-btns img{
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
   }
 </style>
-</head>
-<body>
 
-<div class="wrap">
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+    import { getDatabase, ref, get, set, child } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
-  <div class="panel" id="leftPanel">
-    <div id="loginCard">
-      <div class="login-title">Vibenet</div>
-      <div class="muted">Connect with students • PM Shri KBJ Govt</div>
+    // Firebase config (replace with your real keys)
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY_HERE",
+      authDomain: "the-vibenet.firebaseapp.com",
+      databaseURL: "https://the-vibenet-default-rtdb.firebaseio.com",
+      projectId: "the-vibenet",
+      storageBucket: "the-vibenet.appspot.com",
+      messagingSenderId: "750456552470",
+      appId: "1:750456552470:web:87d410021cda7ef10a0937"
+    };
 
-      <div class="form-row">
-        <label style="font-size:13px;color:#333;margin-bottom:6px">Username</label>
-        <input id="loginUsername" type="text" placeholder="Enter username" autocomplete="off">
-      </div>
-      <div class="form-row">
-        <label style="font-size:13px;color:#333;margin-bottom:6px">Password</label>
-        <input id="loginPassword" type="password" placeholder="Enter password" autocomplete="off">
-      </div>
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const auth = getAuth(app);
+    const googleProvider = new GoogleAuthProvider();
+    const facebookProvider = new FacebookAuthProvider();
 
-      <div class="inline-error" id="loginError"><span style="font-size:16px">⚠</span><div>Invalid username or password</div></div>
+    get(child(ref(db), 'users/admin')).then((snapshot) => {
+      if (!snapshot.exists()) {
+        set(ref(db, 'users/admin'), { password: '1234' });
+      }
+    });
 
-      <div style="margin-top:10px">
-        <button class="signin" id="loginBtn">Sign in</button>
-      </div>
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            localStorage.setItem('currentUser', user.displayName || user.email);
+            window.location.href = "vibenet.html"; // <-- Yahan par file ka naam update kar diya hai
+        }
+    });
 
-      <div class="accounts">
-        <h4>Available usernames (no passwords shown)</h4>
-        <div id="accountList"></div>
-      </div>
-    </div>
+    const formTitle = document.getElementById('formTitle');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const mainBtn = document.getElementById('mainBtn');
+    const switchLink = document.getElementById('switchLink');
+    const usernameMsg = document.getElementById('usernameMsg');
+    const socialMsg = document.getElementById('socialMsg');
+    const usernameLabel = document.getElementById('usernameLabel');
+    const googleBtn = document.getElementById('googleBtn');
+    const facebookBtn = document.getElementById('facebookBtn');
 
-    <div id="profileCard" style="display:none;margin-top:14px;background:linear-gradient(90deg,#fff,#fff);padding:12px;border-radius:10px">
-      <div style="display:flex;align-items:center;gap:10px">
-        <div style="width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--red),#ff6b6b);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800">VN</div>
-        <div>
-          <div id="profileName" style="font-weight:800">You</div>
-          <div style="color:var(--muted);font-size:13px" id="profileSchool">PM Shri KBJ Govt</div>
-        </div>
-      </div>
-    </div>
-  </div>
+    let mode='signup';
 
-  <div class="panel" id="rightPanel" style="display:none">
-    <div class="site-header" id="siteHeader">
-      <div class="brand"><div class="logo">VN</div><div class="site-title">Welcome to VibeNet</div></div>
-      <div class="header-right">
-        <div id="headerUser" style="background:rgba(255,255,255,0.06);padding:8px 10px;border-radius:10px;color:#fff;font-weight:700">—</div>
-        <button class="btn-white" onclick="doLogout()">Logout</button>
-      </div>
-    </div>
+    usernameInput.addEventListener('input', ()=>{
+      if(mode!=='signup'){ usernameMsg.textContent=''; return; } 
+      let u = usernameInput.value.toLowerCase().replace(/\s+/g,'');
+      usernameInput.value = u;
+      if(!u){ usernameMsg.textContent=''; return; }
+      get(child(ref(db), 'users/' + u)).then(snapshot=>{
+        if(snapshot.exists()){ 
+          usernameMsg.style.color='red'; 
+          usernameMsg.textContent='Not Available'; 
+        } else { 
+          usernameMsg.style.color='green'; 
+          usernameMsg.textContent='Available'; 
+        }
+      });
+    });
 
-    <div style="padding:18px">
-      <div class="school-card" onclick="openModal()">
-        <div>
-          <div style="font-size:13px;color:var(--muted)">School</div>
-          <div class="school-name" id="schoolName">PM Shri KBJ Govt</div>
-        </div>
-        <div style="font-weight:700;color:var(--red)">View Students</div>
-      </div>
+    switchLink.addEventListener('click', ()=>{
+      if(mode==='signup'){
+        mode='login';
+        formTitle.textContent='Login';
+        mainBtn.textContent='Login';
+        switchLink.textContent='Sign Up';
+        usernameMsg.textContent='';
+        socialMsg.textContent='';
+        usernameLabel.textContent = "Username";
+      } else {
+        mode='signup';
+        formTitle.textContent='Sign Up';
+        mainBtn.textContent='Sign Up';
+        switchLink.textContent='Login';
+        usernameMsg.textContent='';
+        socialMsg.textContent='';
+        usernameLabel.textContent = "Create Username";
+      }
+    });
 
-      <div class="composer">
-        <input id="composer" placeholder="What's on your mind?" />
-        <button style="margin-top:10px" class="signin" onclick="makePost()">Post</button>
-      </div>
+    mainBtn.addEventListener('click', ()=>{
+      const u = usernameInput.value.trim().toLowerCase();
+      const p = passwordInput.value;
+      if(!u || !p){ socialMsg.style.color='red'; socialMsg.textContent='Enter both username and password'; return; }
 
-      <div class="feed" id="feed">
-        </div>
-    </div>
-  </div>
-</div>
+      if(mode==='signup'){
+        get(child(ref(db), 'users/' + u)).then(snapshot=>{
+          if(snapshot.exists()){ socialMsg.style.color='red'; socialMsg.textContent='Username already exists'; return; }
+          set(ref(db, 'users/' + u), {password:p});
+          socialMsg.style.color='green'; socialMsg.textContent='Sign Up successful! Redirecting...';
+          localStorage.setItem('currentUser', u);
+          setTimeout(() => {
+              window.location.href="vibenet.html"; // <-- Yahan par file ka naam update kar diya hai
+          }, 1500);
+        });
+      } else {
+        get(child(ref(db), 'users/' + u)).then(snapshot=>{
+          if(!snapshot.exists()){ socialMsg.style.color='red'; socialMsg.textContent='Invalid username'; return; }
+          if(snapshot.val().password!==p){ socialMsg.style.color='red'; socialMsg.textContent='Invalid password'; return; }
+          socialMsg.style.color='green'; socialMsg.textContent='Login successful! Redirecting...';
+          localStorage.setItem('currentUser', u);
+          setTimeout(() => {
+              window.location.href="vibenet.html"; // <-- Yahan par file ka naam update kar diya hai
+          }, 1500);
+        });
+      }
+    });
 
-<div class="modal-bg" id="modalBg">
-  <div class="modal" role="dialog" aria-modal="true">
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-      <div style="font-weight:800" id="modalTitle">PM Shri KBJ Govt — Students</div>
-      <div><button class="copy-sm" onclick="closeModal()">Close</button></div>
-    </div>
+    async function handleSocialLogin(provider) {
+        socialMsg.textContent = 'Logging in...';
+        try {
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+            let displayName = (user.displayName || user.email.split('@')[0]).toLowerCase().replace(/\s+/g, '');
+            let username = displayName;
+            let userRef = child(ref(db), 'users/' + username);
+            let snapshot = await get(userRef);
+            let i = 1;
+            while(snapshot.exists()) {
+                username = displayName + i;
+                userRef = child(ref(db), 'users/' + username);
+                snapshot = await get(userRef);
+                i++;
+            }
+            await set(userRef, { password: 'social-login', email: user.email });
+            socialMsg.style.color='green'; 
+            socialMsg.textContent='Login successful! Redirecting...';
+            localStorage.setItem('currentUser', username);
+            setTimeout(() => {
+                window.location.href="vibenet.html"; // <-- Yahan par file ka naam update kar diya hai
+            }, 1500);
+        } catch(error) {
+            console.error(error);
+            socialMsg.style.color='red'; socialMsg.textContent='Login failed. Please try again.';
+        }
+    }
 
-    <div class="tabs" style="margin-top:12px">
-      <div class="tab active" id="tab9" onclick="selectTab(9)">Class 9</div>
-      <div class="tab" id="tab10" onclick="selectTab(10)">Class 10</div>
-    </div>
+    googleBtn.addEventListener('click', () => {
+        handleSocialLogin(googleProvider);
+    });
 
-    <div id="usersArea">
-      </div>
-
-    <div style="margin-top:12px;color:var(--muted);font-size:13px">Click <strong>Copy</strong> to copy username to clipboard.</div>
-  </div>
-</div>
-
-<script>
-/* ========== Config (edit these) ========== */
-const SCHOOL_NAME = "PM Shri KBJ Govt";
-
-/* allowed login accounts */
-const ACCOUNTS = [
-  {user: "admin", pass: "1234"},
-  {user: "vibenet", pass: "1234"}
-];
-
-/* 15 usernames each — replace with real usernames */
-const CLASS9 = [
-  "gond_chua__143","miss_gond_nani143","toxic_queen_official","ishuuuuu__78","miss_hituu00",
-  "miss_baby_doll1432","its_priya_143","@kbj_s9_8","@kbj_s9_9","@kbj_s9_10",
-  "@kbj_s9_11","@kbj_s9_12","@kbj_s9_13","@kbj_s9_14","@kbj_s9_15"
-];
-const CLASS10 = [
-  "Bauri_man","Pagal---pagali---love","parabhatioram143","miss._gond._queen","sapnasuhana00",
-  "prachitanaik145","pagili_nani_1432","@kbj_s10_8","@kbj_s10_9","@kbj_s10_10",
-  "@kbj_s10_11","@kbj_s10_12","@kbj_s10_13","@kbj_s10_14","@kbj_s10_15"
-];
-
-/* Demo official-looking posts (Unsplash queries for formal school photos) */
-const POSTS = [
-  {user:"@principal_kbj", caption:"Annual day celebration — proud moment for our school.", img:"https://source.unsplash.com/featured/?school,assembly", likes:21000},
-  {user:"@kbj_school", caption:"Our new science lab inauguration.", img:"https://source.unsplash.com/featured/?school,classroom", likes:2000},
-  {user:"@sports_kbj", caption:"Inter-school football championship — great team spirit!", img:"https://source.unsplash.com/featured/?students,football", likes:50},
-  {user:"@arts_kbj", caption:"Art & culture exhibition highlights.", img:"https://source.unsplash.com/featured/?school,students", likes:320}
-];
-/* ========================================= */
-
-/* DOM refs */
-const accountList = document.getElementById('accountList');
-const loginBtn = document.getElementById('loginBtn');
-const loginUsername = document.getElementById('loginUsername');
-const loginPassword = document.getElementById('loginPassword');
-const loginError = document.getElementById('loginError');
-const leftPanel = document.getElementById('leftPanel');
-const rightPanel = document.getElementById('rightPanel');
-const siteHeader = document.getElementById('siteHeader');
-const headerUser = document.getElementById('headerUser');
-const profileCard = document.getElementById('profileCard');
-const profileName = document.getElementById('profileName');
-const profileSchool = document.getElementById('profileSchool');
-const feed = document.getElementById('feed');
-const modalBg = document.getElementById('modalBg');
-const usersArea = document.getElementById('usersArea');
-const modalTitle = document.getElementById('modalTitle');
-const schoolNameEl = document.getElementById('schoolName');
-
-schoolNameEl.textContent = SCHOOL_NAME;
-modalTitle.textContent = SCHOOL_NAME + " — Students";
-profileSchool.textContent = SCHOOL_NAME;
-
-/* populate left accounts list (username only shown; password hidden) */
-function renderAccountList(){
-  accountList.innerHTML = "";
-  ACCOUNTS.forEach(a=>{
-    const div = document.createElement('div'); div.className='acct-item';
-    div.innerHTML = `<div style="font-weight:700">${a.user}</div><button class="copy-btn" onclick="copyText('${a.user} / ${a.pass}')">Copy</button>`;
-    accountList.appendChild(div);
-  });
-}
-renderAccountList();
-
-/* login logic */
-function login(){
-  loginError.style.display = 'none';
-  const u = loginUsername.value.trim();
-  const p = loginPassword.value;
-  if(ACCOUNTS.some(a=>a.user===u && a.pass===p)){
-    // success: show right panel
-    document.getElementById('rightPanel').style.display = 'block';
-    document.getElementById('leftPanel').style.gridColumn = '1 / 2';
-    document.getElementById('leftPanel').style.order = 0;
-    document.getElementById('loginCard').style.display = 'none';
-    profileCard.style.display = 'block';
-    siteHeader.style.display = 'flex';
-    headerUser.textContent = u;
-    profileName.textContent = u;
-    // render posts from Firebase
-    renderPosts();
-    // scroll to top
-    window.scrollTo({top:0,behavior:'smooth'});
-  } else {
-    loginError.style.display = 'flex';
-  }
-}
-
-/* Enter key triggers login */
-loginUsername.addEventListener('keydown', (e)=>{ if(e.key==='Enter') login(); });
-loginPassword.addEventListener('keydown', (e)=>{ if(e.key==='Enter') login(); });
-loginBtn.addEventListener('click', login);
-
-/* copy helper */
-function copyText(text){
-  navigator.clipboard.writeText(text).then(()=>showToast('Copied: ' + text), ()=>alert('Copy failed — copy manually: '+text));
-}
-
-/* modal open/close + tabs */
-function openModal(){ modalBg.style.display='flex'; selectTab(9); }
-function closeModal(){ modalBg.style.display='none'; }
-function selectTab(n){
-  document.getElementById('tab9').classList.toggle('active', n===9);
-  document.getElementById('tab10').classList.toggle('active', n===10);
-  const users = (n===9)? CLASS9 : CLASS10;
-  renderUsers(users);
-}
-function renderUsers(list){
-  usersArea.innerHTML='';
-  const grid = document.createElement('div'); grid.className='users-grid';
-  list.forEach(u=>{
-    const chip = document.createElement('div'); chip.className='user-chip';
-    const a = document.createElement('a'); a.href='https://instagram.com/'+u.replace(/^@/,''); a.target='_blank'; a.textContent = u;
-    const cbtn = document.createElement('button'); cbtn.className='copy-sm'; cbtn.textContent='Copy';
-    cbtn.addEventListener('click', ()=> copyText(u) );
-    chip.appendChild(a); chip.appendChild(cbtn);
-    grid.appendChild(chip);
-  });
-  usersArea.appendChild(grid);
-}
-
-/* toast */
-const toast = document.createElement('div'); toast.style.position='fixed'; toast.style.left='50%'; toast.style.transform='translateX(-50%)'; toast.style.bottom='20px'; toast.style.padding='10px 14px'; toast.style.background='#111'; toast.style.color='#fff'; toast.style.borderRadius='8px'; toast.style.display='none'; toast.style.zIndex='99'; document.body.appendChild(toast);
-function showToast(t){ toast.textContent=t; toast.style.display='block'; setTimeout(()=>toast.style.display='none',1400); }
-
-/* logout */
-function doLogout(){
-  // reset UI
-  document.getElementById('loginCard').style.display = '';
-  profileCard.style.display = 'none';
-  document.getElementById('rightPanel').style.display = 'none';
-  siteHeader.style.display = 'none';
-  loginUsername.value=''; loginPassword.value='';
-  loginError.style.display='none';
-  headerUser.textContent='—';
-}
-
-/* close modal on outside click */
-document.getElementById('modalBg').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
-
-/* init */
-document.getElementById('rightPanel').style.display='none';
-siteHeader.style.display='none';
+    facebookBtn.addEventListener('click', () => {
+        handleSocialLogin(facebookProvider);
+    });
 </script>
 </body>
 </html>
