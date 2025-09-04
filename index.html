@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>VibeNet</title>
+
+<!-- Optional: Google Analytics (uses your measurementId) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D6NTSHEPTH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D6NTSHEPTH');
+</script>
+
+<style>
+  :root{
+    --red:#c7121a; --white:#fff; --bg:#fff6f6; --muted:#666;
+    --shadow:0 8px 24px rgba(0,0,0,.08); --radius:12px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:#111}
+  a{color:inherit}
+
+  /* Auth */
+  .auth-wrapper{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .auth-box{width:360px;max-width:92vw;background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:20px;text-align:center}
+  .auth-box h2{color:var(--red);margin:0 0 16px 0}
+  .auth-box label{display:block;text-align:left;font-size:12px;font-weight:700;margin:8px 0 6px}
+  .auth-box input{width:100%;padding:12px;border:1px solid #e9e9e9;border-radius:10px;text-transform:lowercase}
+  .auth-box button{width:100%;padding:12px;border:0;border-radius:10px;background:var(--red);color:#fff;font-weight:800;cursor:pointer}
+  .switch-text{margin-top:10px;font-size:14px}
+  .switch-text a{color:var(--red);cursor:pointer}
+  .hint{font-size:13px;margin-top:6px}
+  .ok{color:#1b8a2f}.err{color:#b71c1c}
+  .social-btns{display:flex;gap:10px;margin-top:10px}
+  .social-btns button{flex:1;display:flex;align-items:center;justify-content:center;background:#f7f7f7;color:#333;border:1px solid #e3e3e3;border-radius:8px}
+  .social-btns img{width:18px;height:18px;margin-right:8px}
+
+  /* App */
+  .site-header{position:sticky;top:0;z-index:10;background:var(--red);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+  .brand{display:flex;align-items:center;gap:10px}
+  .logo{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#fff2f2,rgba(255,255,255,.1));display:flex;align-items:center;justify-content:center;color:var(--red);font-weight:900}
+  .wrap{max-width:980px;margin:16px auto;padding:0 16px}
+  .composer{background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:12px;margin-bottom:14px}
+  .composer input, .composer textarea{width:100%;padding:10px;border:1px solid #eee;border-radius:10px;margin-bottom:8px}
+  .btn{background:var(--red);color:#fff;border:0;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}
+  .feed{display:flex;flex-direction:column;gap:14px}
+  .post{background:#fff;border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+  .post-header{display:flex;gap:10px;align-items:center;padding:12px;border-bottom:1px solid #f2f2f2}
+  .avatar{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--red),#ff6b6b);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900}
+  .uid{font-weight:900}
+  .meta{font-size:12px;color:var(--muted)}
+  .post-body{padding:12px}
+  .post-body img{width:100%;height:auto;border-radius:10px;margin-top:8px}
+  .post-actions{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-top:1px solid #f2f2f2}
+  .like-btn{background:transparent;border:0;color:var(--red);font-weight:800;cursor:pointer}
+  .like-btn.liked{color:#c21807}
+  .count{font-weight:800;color:var(--red)}
+  .comments{border-top:1px solid #f2f2f2;padding:10px 12px;display:flex;flex-direction:column;gap:10px}
+  .comment{display:flex;gap:10px}
+  .comment .cbody{background:#fff7f7;border:1px solid #ffe0e0;border-radius:10px;padding:8px 10px;flex:1}
+  .cuser{font-weight:800;margin-right:6px}
+  .cmeta{font-size:11px;color:var(--muted)}
+  .cform{display:flex;gap:8px;margin-top:4px}
+  .cform input{flex:1;padding:10px;border:1px solid #eee;border-radius:10px}
+  .header-right{display:flex;gap:10px;align-items:center}
+  .chip{background:rgba(255,255,255,.12);padding:8px 10px;border-radius:10px;font-weight:800}
+</style>
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div id="loginWrapper" class="auth-wrapper">
+  <div class="auth-box">
+    <h2 id="formTitle">Sign Up</h2>
+
+    <label id="usernameLabel">Create Username</label>
+    <input id="username" placeholder="enter username (no spaces)">
+    <div id="usernameMsg" class="hint"></div>
+
+    <label>Password</label>
+    <input id="password" type="password" placeholder="enter password">
+    <div id="socialMsg" class="hint"></div>
+
+    <button id="mainBtn">Sign Up</button>
+
+    <div class="social-btns">
+      <button id="googleBtn"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">Google</button>
+      <button id="facebookBtn"><img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_(2019).png">Facebook</button>
+    </div>
+
+    <div class="switch-text">
+      Already have an account? <a id="switchLink">Login</a>
+    </div>
+  </div>
+</div>
+
+<!-- APP SCREEN -->
+<div id="app" style="display:none">
+  <div class="site-header">
+    <div class="brand">
+      <div class="logo">VN</div>
+      <div class="site-title" style="font-weight:900">Welcome to VibeNet</div>
+    </div>
+    <div class="header-right">
+      <div id="headerAvatar" class="avatar" style="width:36px;height:36px;font-size:14px"></div>
+      <div id="headerUser" class="chip">—</div>
+      <button class="btn" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <!-- Composer -->
+    <div class="composer">
+      <textarea id="caption" rows="2" placeholder="What's on your mind?"></textarea>
+      <input id="imageUrl" placeholder="Image URL (optional)">
+      <button class="btn" id="postBtn">Post</button>
+    </div>
+
+    <!-- Feed -->
+    <div id="feed" class="feed"></div>
+  </div>
+</div>
+
+<script type="module">
+/* =================== Firebase SDKs =================== */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import { getDatabase, ref, child, get, set, push, onValue, update } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+/* ============ YOUR FIREBASE CONFIG (as given) ============ */
+const firebaseConfig = {
+  apiKey: "AIzaSyCI5NOdkyTLBvMsYCUJKpnFZ3Kyf77KZTM",
+  authDomain: "the-vibenet.firebaseapp.com",
+  databaseURL: "https://the-vibenet-default-rtdb.firebaseio.com",
+  projectId: "the-vibenet",
+  storageBucket: "the-vibenet.firebasestorage.app",
+  messagingSenderId: "750456552470",
+  appId: "1:750456552470:web:87d410021cda7ef10a0937",
+  measurementId: "G-D6NTSHEPTH"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+const facebookProvider = new FacebookAuthProvider();
+
+/* =================== Auth UI logic =================== */
+const E = (id)=>document.getElementById(id);
+const els = {
+  loginWrapper: E('loginWrapper'),
+  app: E('app'),
+  formTitle: E('formTitle'),
+  username: E('username'),
+  password: E('password'),
+  usernameMsg: E('usernameMsg'),
+  socialMsg: E('socialMsg'),
+  mainBtn: E('mainBtn'),
+  switchLink: E('switchLink'),
+  googleBtn: E('googleBtn'),
+  facebookBtn: E('facebookBtn'),
+  headerUser: E('headerUser'),
+  headerAvatar: E('headerAvatar'),
+  caption: E('caption'),
+  imageUrl: E('imageUrl'),
+  postBtn: E('postBtn'),
+  feed: E('feed')
+};
+
+let mode = 'signup';
+let currentUser = localStorage.getItem('currentUser') || '';
+
+function toUserKey(x){
+  return (x||'').toLowerCase().replace(/\s+/g,''); // no spaces, lowercase
+}
+
+if(currentUser){ showApp(currentUser); }
+
+els.username.addEventListener('input', ()=>{
+  if(mode!=='signup'){ els.usernameMsg.textContent=''; return; }
+  let u = toUserKey(els.username.value);
+  els.username.value = u;
+  if(!u){ els.usernameMsg.textContent=''; return; }
+  get(child(ref(db),'users/'+u)).then(snap=>{
+    if(snap.exists()){ els.usernameMsg.className='hint err'; els.usernameMsg.textContent='Not Available'; }
+    else{ els.usernameMsg.className='hint ok'; els.usernameMsg.textContent='Available'; }
+  });
+});
+
+els.switchLink.addEventListener('click', ()=>{
+  mode = (mode==='signup') ? 'login' : 'signup';
+  els.formTitle.textContent = (mode==='signup')?'Sign Up':'Login';
+  els.mainBtn.textContent = (mode==='signup')?'Sign Up':'Login';
+  E('usernameLabel').textContent = (mode==='signup')?'Create Username':'Username';
+  els.usernameMsg.textContent = els.socialMsg.textContent = '';
+});
+
+els.mainBtn.addEventListener('click', async ()=>{
+  const u = toUserKey(els.username.value);
+  const p = els.password.value;
+  if(!u || !p){ msg('Enter both username & password', true); return; }
+
+  const uRef = child(ref(db),'users/'+u);
+  const snap = await get(uRef);
+
+  if(mode==='signup'){
+    if(snap.exists()){ msg('Username already exists', true); return; }
+    await set(uRef, { password:p, createdAt:Date.now() });
+    localStorage.setItem('currentUser', u);
+    showApp(u);
+  }else{
+    if(!snap.exists()){ msg('Invalid username', true); return; }
+    if(snap.val().password !== p){ msg('Invalid password', true); return; }
+    localStorage.setItem('currentUser', u);
+    showApp(u);
+  }
+});
+
+els.googleBtn.onclick = ()=> socialLogin(googleProvider);
+els.facebookBtn.onclick = ()=> socialLogin(facebookProvider);
+
+async function socialLogin(provider){
+  msg('Logging in…');
+  try{
+    const { user } = await signInWithPopup(auth, provider);
+    let base = toUserKey(user.displayName || user.email.split('@')[0]);
+    let name = base, i = 1;
+    while((await get(child(ref(db),'users/'+name))).exists()){ name = base + (i++); }
+    await set(ref(db,'users/'+name), { password:'social-login', email:user.email, createdAt:Date.now() });
+    localStorage.setItem('currentUser', name);
+    showApp(name);
+  }catch(e){
+    console.error(e);
+    msg('Login failed. Please try again.', true);
+  }
+}
+
+function msg(t, error=false){ els.socialMsg.className='hint '+(error?'err':'ok'); els.socialMsg.textContent=t; }
+
+function showApp(u){
+  currentUser = u;
+  els.loginWrapper.style.display='none';
+  els.app.style.display='block';
+  els.headerUser.textContent='@'+u;
+  els.headerAvatar.textContent = u.replace(/[^A-Z]/gi,'').slice(0,2).toUpperCase() || u.slice(0,2).toUpperCase();
+  startFeed();
+}
+
+window.doLogout = function(){
+  signOut(auth).finally(()=>{
+    localStorage.removeItem('currentUser');
+    currentUser='';
+    els.app.style.display='none';
+    els.loginWrapper.style.display='flex';
+    els.username.value=''; els.password.value=''; els.usernameMsg.textContent=''; els.socialMsg.textContent='';
+  });
+};
+
+/* =================== Feed: posts, likes, comments =================== */
+const postsRef = ref(db, 'posts');
+
+/* Create post */
+els.postBtn.addEventListener('click', async ()=>{
+  if(!currentUser) return;
+  const caption = (els.caption.value||'').trim();
+  const img = (els.imageUrl.value||'').trim();
+  if(!caption && !img){ return msg('Write something or add image URL', true); }
+  const post = {
+    userId: currentUser,
+    caption,
+    imageUrl: img,
+    timestamp: Date.now()
+  };
+  await push(postsRef, post);
+  els.caption.value=''; els.imageUrl.value='';
+});
+
+/* Real-time render posts */
+function startFeed(){
+  onValue(postsRef, (snap)=>{
+    const data = snap.val() || {};
+    // newest first
+    const items = Object.entries(data).map(([id,p])=>({id, ...p})).sort((a,b)=>b.timestamp-a.timestamp);
+    els.feed.innerHTML='';
+    if(items.length===0){
+      els.feed.innerHTML = `<div style="text-align:center;color:var(--muted);font-style:italic;">No posts yet. Be the first!</div>`;
+      return;
+    }
+    items.forEach(renderPost);
+  });
+}
+
+/* Render a single post card with live comments & like state */
+function renderPost(p){
+  const card = document.createElement('div'); card.className='post'; card.id = 'post-'+p.id;
+
+  const time = new Date(p.timestamp||Date.now());
+  const head = `
+    <div class="post-header">
+      <div class="avatar">${(p.userId||'VN').replace(/[^A-Z]/gi,'').slice(0,2).toUpperCase()}</div>
+      <div>
+        <div class="uid">@${p.userId||'unknown'}</div>
+        <div class="meta">${time.toLocaleString()}</div>
+      </div>
+    </div>`;
+
+  const body = `
+    <div class="post-body">
+      ${p.caption ? `<div>${escapeHtml(p.caption)}</div>` : ``}
+      ${p.imageUrl ? `<img src="${escapeAttr(p.imageUrl)}" alt="post image">` : ``}
+    </div>`;
+
+  const actions = document.createElement('div');
+  actions.className='post-actions';
+  actions.innerHTML = `
+    <div><span class="count" id="like-count-${p.id}">0</span> likes</div>
+    <button class="like-btn" id="like-btn-${p.id}">🤍 Like</button>
+  `;
+
+  const commentsWrap = document.createElement('div');
+  commentsWrap.className='comments';
+  commentsWrap.innerHTML = `
+    <div id="comments-list-${p.id}"></div>
+    <div class="cform">
+      <input id="cinput-${p.id}" placeholder="Write a comment… (emoji supported)">
+      <button class="btn" id="csend-${p.id}">Comment</button>
+    </div>
+  `;
+
+  card.innerHTML = head + body;
+  card.appendChild(actions);
+  card.appendChild(commentsWrap);
+  els.feed.appendChild(card);
+
+  // Like bindings (per-user like at /likes/{postId}/{userId}: true)
+  wireLikes(p.id);
+
+  // Comments realtime
+  wireComments(p.id);
+}
+
+/* ---------- Likes (per-user) ---------- */
+function wireLikes(postId){
+  const postLikesRef = ref(db, `likes/${postId}`);
+  const btn = E(`like-btn-${postId}`);
+  const countEl = E(`like-count-${postId}`);
+
+  // live count
+  onValue(postLikesRef, (snap)=>{
+    const likesObj = snap.val() || {};
+    const total = Object.keys(likesObj).length;
+    countEl.textContent = total.toString();
+
+    // my state
+    const iLike = !!likesObj[currentUser];
+    btn.classList.toggle('liked', iLike);
+    btn.textContent = iLike ? '❤️ Liked' : '🤍 Like';
+  });
+
+  btn.onclick = async ()=>{
+    if(!currentUser) return;
+    const myRef = ref(db, `likes/${postId}/${currentUser}`);
+    const exists = (await get(myRef)).exists();
+    if(exists){
+      // unlike
+      await update(myRef, { '.sv': { 'type':'delete' } }).catch(async ()=>{
+        // fallback: set to null via update parent
+        await update(ref(db, `likes/${postId}`), { [currentUser]: null });
+      });
+    }else{
+      await set(myRef, true);
+    }
+  };
+}
+
+/* ---------- Comments (realtime) ---------- */
+function wireComments(postId){
+  const listEl = E(`comments-list-${postId}`);
+  const input = E(`cinput-${postId}`);
+  const send = E(`csend-${postId}`);
+  const commentsRef = ref(db, `comments/${postId}`);
+
+  onValue(commentsRef, (snap)=>{
+    const data = snap.val() || {};
+    const arr = Object.entries(data).map(([id,c])=>({id,...c})).sort((a,b)=>a.timestamp-b.timestamp);
+    listEl.innerHTML='';
+    arr.forEach(c=>{
+      const row = document.createElement('div'); row.className='comment';
+      row.innerHTML = `
+        <div class="avatar" style="width:36px;height:36px;font-size:12px">
+          ${(c.userId||'').replace(/[^A-Z]/gi,'').slice(0,2).toUpperCase() || 'VN'}
+        </div>
+        <div class="cbody">
+          <div><span class="cuser">@${c.userId}</span> ${escapeHtml(c.text||'')}</div>
+          <div class="cmeta">${new Date(c.timestamp||Date.now()).toLocaleString()}</div>
+        </div>`;
+      listEl.appendChild(row);
+    });
+  });
+
+  send.onclick = async ()=>{
+    if(!currentUser) return;
+    const text = (input.value||'').trim();
+    if(!text) return;
+    await push(commentsRef, { userId: currentUser, text, timestamp: Date.now() });
+    input.value='';
+  };
+}
+
+/* ---------- tiny helpers ---------- */
+function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+function escapeAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
+</script>
+</body>
+</html>
